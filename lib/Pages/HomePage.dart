@@ -16,10 +16,23 @@ class _HomePageState extends State<HomePage> {
   TodoDataBase db = TodoDataBase();
   final _myBox = Hive.box('mybox');
 
+  @override
+  void initState() {
+    if (_myBox.get("TODOLIST") == null) {
+      db.createInitialData();
+    } else {
+      db.loadData();
+    }
+
+    // TODO: implement initState
+    super.initState();
+  }
+
   void checkBoxChanged(bool? value, int index) {
     setState(() {
       db.toDoList[index][1] = !db.toDoList[index][1];
     });
+    db.updateDatabase();
   }
 
   void deleteTask(int index) {
@@ -34,6 +47,7 @@ class _HomePageState extends State<HomePage> {
       controller.clear();
     });
     Navigator.of(context).pop();
+    db.updateDatabase();
   }
 
   void createNewTask() {
@@ -46,6 +60,7 @@ class _HomePageState extends State<HomePage> {
             onCancel: () => Navigator.of(context).pop(),
           );
         });
+    db.updateDatabase();
   }
 
   @override

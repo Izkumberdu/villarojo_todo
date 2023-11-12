@@ -15,10 +15,11 @@ class TodoDataBase {
 
   // load data from database
   void loadData() {
-    todo
+    toDoList = _myBox.get("TODOLIST");
   }
-  //upodate database 
-  void updateDatabase() {
 
+  //upodate database
+  void updateDatabase() {
+    _myBox.put("TODOLIST", toDoList);
   }
 }
