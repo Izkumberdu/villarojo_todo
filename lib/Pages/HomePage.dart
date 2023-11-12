@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:villarojo_todo/Functions/dialog_box.dart';
 import 'package:villarojo_todo/Functions/todo_tile.dart';
+import 'package:villarojo_todo/data/database.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,27 +13,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final controller = TextEditingController();
-
-  List toDoList = [
-    ["Make Tutorial", false],
-    ["Do Exercise", false]
-  ];
+  TodoDataBase db = TodoDataBase();
+  final _myBox = Hive.box('mybox');
 
   void checkBoxChanged(bool? value, int index) {
     setState(() {
-      toDoList[index][1] = !toDoList[index][1];
+      db.toDoList[index][1] = !db.toDoList[index][1];
     });
   }
 
   void deleteTask(int index) {
     setState(() {
-      toDoList.removeAt(index);
+      db.toDoList.removeAt(index);
     });
   }
 
   void saveNewTask() {
     setState(() {
-      toDoList.add([controller.text, false]);
+      db.toDoList.add([controller.text, false]);
       controller.clear();
     });
     Navigator.of(context).pop();
@@ -62,12 +61,12 @@ class _HomePageState extends State<HomePage> {
         child: Icon(Icons.add),
       ),
       body: ListView.builder(
-          itemCount: toDoList.length,
+          itemCount: db.toDoList.length,
           itemBuilder: (context, index) {
             return ToDoTile(
-              taskName: toDoList[index][0],
+              taskName: db.toDoList[index][0],
               onChanged: (value) => checkBoxChanged(value, index),
-              taskCompleted: toDoList[index][1],
+              taskCompleted: db.toDoList[index][1],
               deleteFunction: (context) => deleteTask(index),
             );
           }),
