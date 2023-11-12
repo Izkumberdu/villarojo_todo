@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:villarojo_todo/dialog_box.dart';
-import 'package:villarojo_todo/todo_tile.dart';
+import 'package:villarojo_todo/Functions/dialog_box.dart';
+import 'package:villarojo_todo/Functions/todo_tile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -10,6 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final controller = TextEditingController();
+
   List toDoList = [
     ["Make Tutorial", false],
     ["Do Exercise", false]
@@ -21,11 +23,23 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void saveNewTask() {
+    setState(() {
+      toDoList.add([controller.text, false]);
+      controller.clear();
+    });
+    Navigator.of(context).pop();
+  }
+
   void createNewTask() {
     showDialog(
         context: context,
         builder: (context) {
-          return DialogBox();
+          return DialogBox(
+            controller: controller,
+            onSave: saveNewTask,
+            onCancel: () => Navigator.of(context).pop(),
+          );
         });
   }
 
