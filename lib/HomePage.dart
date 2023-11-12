@@ -14,8 +14,10 @@ class _HomePageState extends State<HomePage> {
     ["Do Exercise", false]
   ];
 
-  void checkBoxChanged(bool value, int index){
-
+  void checkBoxChanged(bool? value, int index) {
+    setState(() {
+      toDoList[index][1] = !toDoList[index][1];
+    });
   }
 
   @override
@@ -27,8 +29,12 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
       ),
       body: ListView.builder(
-          itemCount: toDoList.length, itemBuilder: (context, index) {
-            return ToDoTile(taskName: toDoList[index][0], onChanged: (value) => checkBoxChanged , taskCompleted: toDoList[index][1])
+          itemCount: toDoList.length,
+          itemBuilder: (context, index) {
+            return ToDoTile(
+                taskName: toDoList[index][0],
+                onChanged: (value) => checkBoxChanged(value, index),
+                taskCompleted: toDoList[index][1]);
           }),
     );
   }
